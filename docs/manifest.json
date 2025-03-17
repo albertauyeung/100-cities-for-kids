@@ -1,0 +1,15 @@
+{
+  "name": "100 Cities for Kids",
+  "short_name": "100 Cities for Kids",
+  "start_url": "/100-cities-for-kids/",
+  "scope": "/100-cities-for-kids/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/100-cities-for-kids/favicon.svg",
+      "sizes": "512x512"
+    }
+  ]
+}

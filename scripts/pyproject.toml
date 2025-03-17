@@ -1,0 +1,7 @@
+[project]
+name = "100CitiesForKids"
+version = "0.1.0"
+description = "Scripts for the 100 Cities for Kids project"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []

@@ -1,0 +1,12 @@
+baseURL: https://ayeung.dev/100-cities-for-kids/
+languageCode: en-us
+title: 100 Cities for Kids
+
+theme: hugo-book
+
+publishDir: docs
+
+params:
+  BookTheme: 'light'
+  BookSection: '*'
+  BookToC: false
