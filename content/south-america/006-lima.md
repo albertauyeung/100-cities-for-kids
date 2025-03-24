@@ -1,5 +1,5 @@
 ---
-title: 006. Lima, Peru
+title: 006. Lima
 weight: 6
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: 005. New York City, USA
+title: 005. New York City
 weight: 5
 ---
 
