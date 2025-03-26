@@ -1,18 +1,14 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Asia on 100 Cities for Kids</title>
-    <link>https://ayeung.dev/100-cities-for-kids/asia/</link>
-    <description>Recent content in Asia on 100 Cities for Kids</description>
-    <generator>Hugo</generator>
-    <language>en-us</language>
-    <atom:link href="https://ayeung.dev/100-cities-for-kids/asia/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>004. Seoul, South Korea</title>
-      <link>https://ayeung.dev/100-cities-for-kids/asia/004-seoul/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://ayeung.dev/100-cities-for-kids/asia/004-seoul/</guid>
-      <description>&lt;h1 id=&#34;seoul-south-korea&#34;&gt;&#xA;  Seoul, South Korea&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#seoul-south-korea&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;City: 首爾 (sau2 ji5)&lt;/li&gt;&#xA;&lt;li&gt;Country: 🇰🇷 韓國 (hon4 gwok3)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Seoul is the capital city of South Korea, a fascinating country in East Asia 🌏. This vibrant city is full of interesting sights 🌟, delicious food 🍲, and amazing people!&lt;/p&gt;&#xA;&lt;h2 id=&#34;where-is-seoul-&#34;&gt;&#xA;  Where Is Seoul? 📍&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#where-is-seoul-&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;Seoul is located in the northwestern part of South Korea, quite close to the border with North Korea 🗺️. It sits along the Han River 🏞️, which divides the city into two halves. If you look at a map, you can find Seoul at these coordinates: 37.532600, 127.024612.&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Asia on 100 Cities for Kids</title><link>http://localhost:1313/100-cities-for-kids/asia/</link><description>Recent content in Asia on 100 Cities for Kids</description><generator>Hugo</generator><language>en-us</language><atom:link href="http://localhost:1313/100-cities-for-kids/asia/index.xml" rel="self" type="application/rss+xml"/><item><title>004. Seoul, South Korea</title><link>http://localhost:1313/100-cities-for-kids/asia/004-seoul/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://localhost:1313/100-cities-for-kids/asia/004-seoul/</guid><description>&lt;h1 id="seoul-south-korea">
+ Seoul, South Korea
+ &lt;a class="anchor" href="#seoul-south-korea">#&lt;/a>
+&lt;/h1>
+&lt;ul>
+&lt;li>City: 首爾 (sau2 ji5)&lt;/li>
+&lt;li>Country: 🇰🇷 韓國 (hon4 gwok3)&lt;/li>
+&lt;/ul>
+&lt;p>Seoul is the capital city of South Korea, a fascinating country in East Asia 🌏. This vibrant city is full of interesting sights 🌟, delicious food 🍲, and amazing people!&lt;/p>
+&lt;h2 id="where-is-seoul-">
+ Where Is Seoul? 📍
+ &lt;a class="anchor" href="#where-is-seoul-">#&lt;/a>
+&lt;/h2>
+&lt;p>Seoul is located in the northwestern part of South Korea, quite close to the border with North Korea 🗺️. It sits along the Han River 🏞️, which divides the city into two halves. If you look at a map, you can find Seoul at these coordinates: 37.532600, 127.024612.&lt;/p></description></item><item><title/><link>http://localhost:1313/100-cities-for-kids/asia/009-singapore/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>http://localhost:1313/100-cities-for-kids/asia/009-singapore/</guid><description/></item></channel></rss>

@@ -1,5 +1,6 @@
 ---
 title: 003. Stockholm
+weight: 3
 ---
 
 # Stockholm, Sweden

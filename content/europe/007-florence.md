@@ -1,5 +1,6 @@
 ---
 title: 007. Florence
+weight: 7
 ---
 
 # florence, italy

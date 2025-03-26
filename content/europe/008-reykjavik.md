@@ -12,7 +12,7 @@ Reykjavik is a fascinating city filled with colorful buildings 🏠🌈, interes
 
 ## Where in the World is Reykjavik? 🌍
 
-Reykjavik is located in the northwestern part of Iceland, sitting on the shores of Faxaflói bay 🌊. Did you know it's the northernmost capital city in the world? 🧭❄️ That means it's farther north than any other country's main city 🗺️. The city covers about 200 square kilometers of land, which is plenty of space for its residents 🏡.
+Reykjavik is located in the southwestern part of Iceland, sitting on the shores of Faxaflói bay 🌊. Did you know it's the northernmost capital city in the world? 🧭❄️ That means it's farther north than any other country's main city 🗺️. The city covers about 200 square kilometers of land, which is plenty of space for its residents 🏡.
 
 ## How Many People Live There? 👪
 
