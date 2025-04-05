@@ -1,1 +1,45 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"><url><loc>http://localhost:1313/100-cities-for-kids/europe/001-dublin/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/europe/002-prague/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/europe/003-stockholm/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/asia/004-seoul/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/north-america/005-newyorkcity/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/south-america/006-lima/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/europe/007-florence/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/europe/008-reykjavik/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/asia/009-singapore/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/europe/010-copenhagen/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/asia/011-osaka/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/europe/012-vienna/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/north-america/013-sanfrancisco/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/asia/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/categories/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/europe/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/north-america/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/south-america/</loc></url><url><loc>http://localhost:1313/100-cities-for-kids/tags/</loc></url></urlset>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://ayeung.dev/100-cities-for-kids/europe/001-dublin/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/europe/002-prague/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/europe/003-stockholm/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/asia/004-seoul/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/north-america/005-newyorkcity/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/south-america/006-lima/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/europe/007-florence/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/europe/008-reykjavik/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/asia/009-singapore/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/europe/010-copenhagen/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/asia/011-osaka/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/europe/012-vienna/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/north-america/013-sanfrancisco/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/asia/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/categories/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/europe/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/north-america/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/south-america/</loc>
+  </url><url>
+    <loc>https://ayeung.dev/100-cities-for-kids/tags/</loc>
+  </url>
+</urlset>
