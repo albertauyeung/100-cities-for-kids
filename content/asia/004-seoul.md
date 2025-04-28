@@ -1,5 +1,5 @@
 ---
-title: 004. Seoul, South Korea
+title: 004. Seoul
 weight: 4
 ---
 
