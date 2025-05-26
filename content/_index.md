@@ -23,9 +23,10 @@ Each city is like a treasure chest full of fun facts and interesting stories! �
 ### How We Explore 🚀
 
 We've organized cities by continents to make it easy to explore:
-- 🌎 North America
-- 🌍 Europe
 - 🌏 Asia
+- 🌏 Australia
+- 🌍 Europe
+- 🌎 North America
 - 🌎 South America
 
 Each city has its own special story to tell, with colorful emojis and easy-to-read descriptions. You'll discover what makes each place unique and special! ✨
