@@ -8,8 +8,6 @@ weight: 46
 - City: 赫尔辛基 (haak1 ji5 san1 gei1)
 - Country: 🇫🇮 芬蘭 (fan1 laan4)
 
-![Helsinki city skyline featuring the famous white Helsinki Cathedral and the red-brick Uspenski Cathedral by the harbor.](https://pplx-res.cloudinary.com/image/upload/v1754910110/pplx_project_search_images/9bc205bff02f3137217fa8d1daf3856220d07091.png)
-
 Helsinki city skyline featuring the famous white Helsinki Cathedral and the red-brick Uspenski Cathedral by the harbor.
 
 ## Where is Helsinki? 📍
@@ -20,15 +18,11 @@ The city is built on a special piece of land called a peninsula that sticks out 
 
 ## A Very Special Island City 🏝️
 
-![Aerial view of a green island in the Helsinki archipelago surrounded by blue waters, showcasing the city's natural coastal beauty.](https://pplx-res.cloudinary.com/image/upload/v1754910110/pplx_project_search_images/37fc7a3ce8a95d6a1460655ec02feee34ea26240.png)
-
 Aerial view of a green island in the Helsinki archipelago surrounded by blue waters, showcasing the city's natural coastal beauty.
 
 Here's something really cool about Helsinki - it's not just built on the mainland! The city is actually spread across **over 300 islands**! 🏝️ That's right, three hundred islands! It's like having a city built on a giant puzzle of land pieces floating in the sea. 🧩 The coastline stretches for 130 kilometers, making Helsinki one of the most unique capital cities in the world.
 
 The most famous of these islands is called **Suomenlinna**. This island is super special because it's home to an old sea fortress built way back in 1748. It's so important that UNESCO (a group that protects special places around the world) has named it a World Heritage Site. 🏰 People built this fortress to protect Finland from enemies who might come from the sea. Today, you can take a fun ferry ride to visit this island and explore the old walls, tunnels, and buildings. 🚢
-
-![Suomenlinna is a historic sea fortress island near Helsinki, known for its distinctive star-shaped walls and scenic views of the city and sea.](https://pplx-res.cloudinary.com/image/upload/v1754759989/pplx_project_search_images/6000826009d3d15ab83313923b2284e8bef4647c.png)
 
 Suomenlinna is a historic sea fortress island near Helsinki, known for its distinctive star-shaped walls and scenic views of the city and sea.
 
@@ -56,8 +50,6 @@ Finnish food might be different from what you're used to, but it's really tasty!
 
 **Ruisleipä** - This is dark, dense rye bread that Finnish people love so much that they even sell it at the airport for people moving away from Finland! 🍞
 
-![Interior of a traditional Finnish wooden sauna with a bucket, ladle, and heater stones illustrating Finland's sauna culture.](https://www.fluidra.com/wp-content/uploads/2021/09/20-experiencia-wellness.jpg)
-
 Interior of a traditional Finnish wooden sauna with a bucket, ladle, and heater stones illustrating Finland's sauna culture.
 
 ## The Amazing Finnish Sauna Culture 🔥
@@ -69,8 +61,6 @@ Finnish saunas are usually heated to about 80°C (176°F), which is super hot. P
 Finnish families often have saunas in their homes, and it's a place where they relax, spend time together, and feel peaceful. Many saunas are built near lakes or the sea, so people can jump into the cool water after getting hot in the sauna. ❄️
 
 ## Jean Sibelius: Finland's Greatest Composer 🎶
-
-![Portrait of Jean Sibelius, the renowned Finnish composer, painted by J. Baer in 1957.](https://pplx-res.cloudinary.com/image/upload/v1754910111/pplx_project_search_images/ae1cb45dcef232918ddf9d26257cfedd2e053dff.png)
 
 Portrait of Jean Sibelius, the renowned Finnish composer, painted by J. Baer in 1957.
 
