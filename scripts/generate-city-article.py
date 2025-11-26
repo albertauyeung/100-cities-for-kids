@@ -15,6 +15,7 @@ Usage:
     python generate-city-article.py "Cairo" --dry-run
 """
 
+import os
 import re
 import subprocess
 from dataclasses import dataclass
@@ -26,8 +27,26 @@ from anthropic import Anthropic
 from dotenv import load_dotenv
 from ToJyutping import ToJyutping
 
-# Load environment variables from .env file
-load_dotenv()
+# Project paths (relative to scripts directory)
+PROJECT_ROOT = Path(__file__).parent.parent
+
+# Load environment variables from .env file in project root
+ENV_FILE = PROJECT_ROOT / ".env"
+load_dotenv(ENV_FILE)
+
+
+def get_api_key() -> str:
+    """Get the Anthropic API key from environment variables."""
+    api_key = os.getenv("ANTHROPIC_API_KEY")
+    if not api_key:
+        typer.echo(
+            "❌ ANTHROPIC_API_KEY not found!\n"
+            f"   Please add it to: {ENV_FILE}\n"
+            "   Example: ANTHROPIC_API_KEY=sk-ant-...",
+            err=True,
+        )
+        raise typer.Exit(1)
+    return api_key
 
 # ============================================================================
 # Configuration
@@ -36,8 +55,7 @@ load_dotenv()
 CLAUDE_MODEL = "claude-sonnet-4-20250514"
 MAX_TOKENS = 4096
 
-# Project paths (relative to scripts directory)
-PROJECT_ROOT = Path(__file__).parent.parent
+# Content directory
 CONTENT_DIR = PROJECT_ROOT / "content"
 
 # Valid continents and their folder names
@@ -122,7 +140,8 @@ class ClaudeClient:
     """Wrapper for Claude API interactions."""
 
     def __init__(self, model: str = CLAUDE_MODEL, max_tokens: int = MAX_TOKENS):
-        self.client = Anthropic()
+        api_key = get_api_key()
+        self.client = Anthropic(api_key=api_key)
         self.model = model
         self.max_tokens = max_tokens
 
