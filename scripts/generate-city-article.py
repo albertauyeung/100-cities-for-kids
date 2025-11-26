@@ -75,15 +75,21 @@ CONTINENTS = {
 
 ARTICLE_PROMPT_TEMPLATE = """You are writing an educational article about {city}, {country} for children aged 6-12.
 
+IMPORTANT: Use web search to find accurate, up-to-date information about this city, including:
+- Current population statistics
+- Famous landmarks and attractions
+- Notable people (musicians, scientists) born in this city
+- Interesting facts
+
 Write an engaging, fun, and informative article that includes the following sections:
 
 1. **Introduction** - A brief, exciting introduction to the city
 2. **Where Is {city}?** - Location details, nearby landmarks, coordinates if interesting
-3. **How Many People Live There?** - Population facts in a kid-friendly way
+3. **How Many People Live There?** - Population facts in a kid-friendly way (use latest data from search)
 4. **Special Places to See** - One or two famous landmarks or attractions
 5. **Language and Food** - What language people speak, famous local foods
-6. **A Famous Musician from {city}** - A notable musician born there with fun facts
-7. **A Scientist from {city}** - A notable scientist with their achievements explained simply
+6. **A Famous Musician from {city}** - A notable musician born there with fun facts (verify with search)
+7. **A Scientist from {city}** - A notable scientist with their achievements explained simply (verify with search)
 8. **Fun Fact About {city}** - An interesting, surprising fact kids would love
 
 Guidelines:
@@ -95,6 +101,7 @@ Guidelines:
 - Make it educational but fun!
 - Use markdown formatting with ## for section headings
 - Start with a # heading: "# {city}, {country}"
+- VERIFY all facts using web search before including them
 
 Write the article now:"""
 
@@ -139,6 +146,9 @@ class CityInfo:
 class ClaudeClient:
     """Wrapper for Claude API interactions."""
 
+    # Web search tool definition for Anthropic API
+    WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search"}
+
     def __init__(self, model: str = CLAUDE_MODEL, max_tokens: int = MAX_TOKENS):
         api_key = get_api_key()
         self.client = Anthropic(api_key=api_key)
@@ -154,10 +164,27 @@ class ClaudeClient:
         )
         return message.content[0].text
 
+    def complete_with_search(self, prompt: str) -> str:
+        """Send a prompt to Claude with web search enabled."""
+        message = self.client.messages.create(
+            model=self.model,
+            max_tokens=self.max_tokens,
+            tools=[self.WEB_SEARCH_TOOL],
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+        # Extract text from response (may have multiple content blocks)
+        text_parts = []
+        for block in message.content:
+            if block.type == "text":
+                text_parts.append(block.text)
+
+        return "\n".join(text_parts)
+
     def generate_article(self, city: str, country: str) -> str:
-        """Generate a city article for kids."""
+        """Generate a city article for kids using web search for accuracy."""
         prompt = ARTICLE_PROMPT_TEMPLATE.format(city=city, country=country)
-        return self.complete(prompt)
+        return self.complete_with_search(prompt)
 
     def get_city_info(self, city: str) -> tuple[str, str]:
         """Get country and continent for a city."""
