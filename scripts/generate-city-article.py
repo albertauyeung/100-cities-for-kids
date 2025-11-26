@@ -259,6 +259,77 @@ def get_continent_folder(continent: str) -> Optional[Path]:
     return None
 
 
+@dataclass
+class ExistingArticle:
+    """Information about an existing article."""
+
+    path: Path
+    article_number: int
+    city_name: str
+    continent_folder: Path
+
+
+def find_existing_article(city: str) -> Optional[ExistingArticle]:
+    """Find an existing article for a city by searching all content folders."""
+    city_slug = city.lower().replace(" ", "-")
+
+    for continent_dir in CONTENT_DIR.iterdir():
+        if not continent_dir.is_dir() or continent_dir.name.startswith("_"):
+            continue
+
+        for article_file in continent_dir.glob("*.md"):
+            if article_file.name.startswith("_"):
+                continue
+
+            # Check if filename contains the city slug
+            # Filename format: "001-dublin.md"
+            match = re.match(r"(\d+)-(.+)\.md", article_file.name)
+            if match:
+                number = int(match.group(1))
+                file_city_slug = match.group(2)
+
+                if file_city_slug == city_slug:
+                    return ExistingArticle(
+                        path=article_file,
+                        article_number=number,
+                        city_name=city,
+                        continent_folder=continent_dir,
+                    )
+
+    return None
+
+
+def list_all_articles() -> list[ExistingArticle]:
+    """List all existing articles in the content directory."""
+    articles = []
+
+    for continent_dir in CONTENT_DIR.iterdir():
+        if not continent_dir.is_dir() or continent_dir.name.startswith("_"):
+            continue
+
+        for article_file in continent_dir.glob("*.md"):
+            if article_file.name.startswith("_"):
+                continue
+
+            match = re.match(r"(\d+)-(.+)\.md", article_file.name)
+            if match:
+                number = int(match.group(1))
+                city_slug = match.group(2)
+                # Convert slug back to title case
+                city_name = city_slug.replace("-", " ").title()
+
+                articles.append(
+                    ExistingArticle(
+                        path=article_file,
+                        article_number=number,
+                        city_name=city_name,
+                        continent_folder=continent_dir,
+                    )
+                )
+
+    return sorted(articles, key=lambda a: a.article_number)
+
+
 # ============================================================================
 # Article Processing Functions
 # ============================================================================
@@ -491,6 +562,109 @@ def list_continents() -> None:
     typer.echo("Valid Continents:")
     for name, folder in sorted(set((v, v) for v in CONTINENTS.values())):
         typer.echo(f"  - {folder}")
+
+
+@app.command(name="list")
+def list_articles() -> None:
+    """List all existing city articles."""
+    articles = list_all_articles()
+
+    if not articles:
+        typer.echo("No articles found.")
+        return
+
+    typer.echo(f"Found {len(articles)} articles:\n")
+    typer.echo(f"{'#':<5} {'City':<20} {'Continent':<15} {'File'}")
+    typer.echo("-" * 70)
+
+    for article in articles:
+        typer.echo(
+            f"{article.article_number:03d}   {article.city_name:<20} "
+            f"{article.continent_folder.name:<15} {article.path.name}"
+        )
+
+
+@app.command()
+def regenerate(
+    city: str = typer.Argument(..., help="Name of the city to regenerate"),
+    build: bool = typer.Option(
+        False, "--build", "-b", help="Build Hugo site after regenerating"
+    ),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", "-d", help="Print article without saving"
+    ),
+) -> None:
+    """Regenerate an existing city article with fresh content.
+
+    This command finds an existing article for the specified city and
+    regenerates it with new content while keeping the same article number.
+
+    Examples:
+        python generate-city-article.py regenerate Tokyo
+        python generate-city-article.py regenerate "New York" --build
+        python generate-city-article.py regenerate Paris --dry-run
+    """
+    # Find existing article
+    existing = find_existing_article(city)
+
+    if not existing:
+        typer.echo(f"❌ No existing article found for '{city}'", err=True)
+        typer.echo("\nAvailable cities:")
+        articles = list_all_articles()
+        for article in articles[:10]:  # Show first 10
+            typer.echo(f"  - {article.city_name}")
+        if len(articles) > 10:
+            typer.echo(f"  ... and {len(articles) - 10} more (use 'list' command to see all)")
+        raise typer.Exit(1)
+
+    typer.echo(f"🔄 Regenerating article about {city}...")
+    typer.echo(f"   Existing file: {existing.path}")
+    typer.echo(f"   Article number: {existing.article_number:03d}")
+
+    # Initialize Claude client
+    claude = ClaudeClient()
+
+    # Get city information (country, continent, translations)
+    typer.echo("📍 Getting city information...")
+    city_info = build_city_info(claude, city)
+
+    typer.echo(f"   Country: {city_info.country}")
+    typer.echo(f"   Continent: {city_info.continent.title()}")
+    typer.echo(f"   Chinese: {city_info.name_chinese} ({city_info.name_jyutping})")
+    typer.echo(
+        f"   Country (Chinese): {city_info.country_emoji} {city_info.country_chinese} ({city_info.country_jyutping})"
+    )
+
+    # Generate the article content
+    typer.echo("✍️  Generating article content (with web search)...")
+    article = claude.generate_article(city, city_info.country)
+
+    # Process and format the article
+    processed_article = process_article_content(article, city_info)
+    frontmatter = create_frontmatter(existing.article_number, city)
+    final_article = frontmatter + processed_article
+
+    if dry_run:
+        typer.echo("\n" + "=" * 60)
+        typer.echo("Regenerated Article (dry run):")
+        typer.echo("=" * 60 + "\n")
+        typer.echo(final_article)
+        typer.echo("\n" + "=" * 60)
+        typer.echo(f"Would overwrite: {existing.path}")
+    else:
+        # Overwrite the existing article
+        existing.path.write_text(final_article, encoding="utf-8")
+        typer.echo(f"✅ Article regenerated: {existing.path}")
+
+        # Build Hugo site if requested
+        if build:
+            typer.echo("🔨 Building Hugo site...")
+            if build_hugo_site():
+                typer.echo("✅ Hugo site built successfully!")
+                typer.echo("🌐 View at: https://ayeung.dev/100-cities-for-kids/")
+            else:
+                typer.echo("❌ Hugo build failed", err=True)
+                raise typer.Exit(1)
 
 
 if __name__ == "__main__":
