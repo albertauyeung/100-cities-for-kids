@@ -3,22 +3,23 @@
 City Article Generator for Kids
 
 This script generates educational articles about cities for children
-using the Claude API. Articles include:
-- Basic information about the city
-- Location and population
-- Famous landmarks
-- Language and food
-- Notable people (musicians, scientists)
-- Fun facts
+using the Claude API. It automatically:
+- Detects which continent the city belongs to
+- Calculates the next article number
+- Saves to the correct content folder
+- Optionally builds the Hugo site
 
 Usage:
-    python generate-city-article.py --city "Tokyo" --country "Japan"
-    python generate-city-article.py --city "Paris" --country "France" --output-dir ../content/europe
+    python generate-city-article.py "Tokyo"
+    python generate-city-article.py "Paris" --build
+    python generate-city-article.py "Cairo" --dry-run
 """
 
 import re
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 import typer
 from anthropic import Anthropic
@@ -34,6 +35,25 @@ load_dotenv()
 
 CLAUDE_MODEL = "claude-sonnet-4-20250514"
 MAX_TOKENS = 4096
+
+# Project paths (relative to scripts directory)
+PROJECT_ROOT = Path(__file__).parent.parent
+CONTENT_DIR = PROJECT_ROOT / "content"
+
+# Valid continents and their folder names
+CONTINENTS = {
+    "africa": "africa",
+    "asia": "asia",
+    "australia": "australia",
+    "oceania": "australia",  # Oceania maps to australia folder
+    "europe": "europe",
+    "north america": "north-america",
+    "south america": "south-america",
+}
+
+# ============================================================================
+# Prompt Templates
+# ============================================================================
 
 ARTICLE_PROMPT_TEMPLATE = """You are writing an educational article about {city}, {country} for children aged 6-12.
 
@@ -60,6 +80,13 @@ Guidelines:
 
 Write the article now:"""
 
+CITY_INFO_PROMPT_TEMPLATE = """For the city "{city}", provide the following information in exactly this format:
+
+country: [country name in English]
+continent: [one of: Africa, Asia, Australia, Europe, North America, South America]
+
+Output ONLY these two lines, nothing else."""
+
 TRANSLATE_PROMPT_TEMPLATE = """Translate "{text}" into Traditional Chinese.
 Output ONLY the translation, nothing else."""
 
@@ -78,6 +105,7 @@ class CityInfo:
 
     name: str
     country: str
+    continent: str
     name_chinese: str = ""
     country_chinese: str = ""
     country_emoji: str = ""
@@ -85,18 +113,8 @@ class CityInfo:
     country_jyutping: str = ""
 
 
-@dataclass
-class ArticleConfig:
-    """Configuration for article generation."""
-
-    city: str
-    country: str
-    article_number: int
-    output_dir: Path
-
-
 # ============================================================================
-# Claude API Functions
+# Claude API Client
 # ============================================================================
 
 
@@ -122,6 +140,22 @@ class ClaudeClient:
         prompt = ARTICLE_PROMPT_TEMPLATE.format(city=city, country=country)
         return self.complete(prompt)
 
+    def get_city_info(self, city: str) -> tuple[str, str]:
+        """Get country and continent for a city."""
+        prompt = CITY_INFO_PROMPT_TEMPLATE.format(city=city)
+        response = self.complete(prompt).strip()
+
+        # Parse response
+        country = ""
+        continent = ""
+        for line in response.split("\n"):
+            if line.lower().startswith("country:"):
+                country = line.split(":", 1)[1].strip()
+            elif line.lower().startswith("continent:"):
+                continent = line.split(":", 1)[1].strip().lower()
+
+        return country, continent
+
     def translate_to_chinese(self, text: str) -> str:
         """Translate text to Traditional Chinese."""
         prompt = TRANSLATE_PROMPT_TEMPLATE.format(text=text)
@@ -145,13 +179,51 @@ def get_jyutping(chinese_text: str) -> str:
 
 
 # ============================================================================
+# Article Number Management
+# ============================================================================
+
+
+def get_next_article_number() -> int:
+    """Find the next available article number by scanning all content folders."""
+    max_number = 0
+
+    for continent_dir in CONTENT_DIR.iterdir():
+        if not continent_dir.is_dir():
+            continue
+
+        for article_file in continent_dir.glob("*.md"):
+            if article_file.name.startswith("_"):
+                continue
+
+            # Extract number from filename like "001-dublin.md"
+            match = re.match(r"(\d+)-", article_file.name)
+            if match:
+                number = int(match.group(1))
+                max_number = max(max_number, number)
+
+    return max_number + 1
+
+
+def get_continent_folder(continent: str) -> Optional[Path]:
+    """Get the content folder path for a continent."""
+    continent_key = continent.lower()
+    if continent_key in CONTINENTS:
+        folder_name = CONTINENTS[continent_key]
+        return CONTENT_DIR / folder_name
+    return None
+
+
+# ============================================================================
 # Article Processing Functions
 # ============================================================================
 
 
-def build_city_info(claude: ClaudeClient, city: str, country: str) -> CityInfo:
+def build_city_info(claude: ClaudeClient, city: str) -> CityInfo:
     """Build complete city information with translations and romanizations."""
-    info = CityInfo(name=city, country=country)
+    # Get country and continent
+    country, continent = claude.get_city_info(city)
+
+    info = CityInfo(name=city, country=country, continent=continent)
 
     # Get Chinese translations
     info.name_chinese = claude.translate_to_chinese(city)
@@ -219,51 +291,99 @@ def save_article(
 
 
 # ============================================================================
+# Hugo Build
+# ============================================================================
+
+
+def build_hugo_site() -> bool:
+    """Build the Hugo site. Returns True if successful."""
+    try:
+        result = subprocess.run(
+            ["hugo"],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return True
+    except subprocess.CalledProcessError as e:
+        typer.echo(f"Hugo build failed: {e.stderr}", err=True)
+        return False
+    except FileNotFoundError:
+        typer.echo("Hugo not found. Please install Hugo first.", err=True)
+        return False
+
+
+# ============================================================================
 # Main CLI Application
 # ============================================================================
 
 app = typer.Typer(
     name="generate-city-article",
     help="Generate educational city articles for kids using Claude API.",
+    add_completion=False,
 )
 
 
 @app.command()
-def generate(
-    city: str = typer.Option(..., "--city", "-c", help="Name of the city"),
-    country: str = typer.Option(..., "--country", "-C", help="Name of the country"),
-    article_number: int = typer.Option(
-        1, "--number", "-n", help="Article number for ordering"
-    ),
-    output_dir: Path = typer.Option(
-        Path("../articles/generated"),
-        "--output-dir",
-        "-o",
-        help="Output directory for the article",
+def main(
+    city: str = typer.Argument(..., help="Name of the city to generate an article for"),
+    build: bool = typer.Option(
+        False, "--build", "-b", help="Build Hugo site after generating"
     ),
     dry_run: bool = typer.Option(
         False, "--dry-run", "-d", help="Print article without saving"
     ),
+    number: Optional[int] = typer.Option(
+        None, "--number", "-n", help="Override article number (auto-detected by default)"
+    ),
 ) -> None:
-    """Generate an educational article about a city for kids."""
-    typer.echo(f"Generating article about {city}, {country}...")
+    """Generate an educational article about a city for kids.
+
+    Simply provide a city name and the script will:
+    - Detect the country and continent automatically
+    - Generate a kid-friendly article
+    - Save it to the correct content folder
+    - Optionally build the Hugo site
+
+    Examples:
+        python generate-city-article.py Tokyo
+        python generate-city-article.py "New York" --build
+        python generate-city-article.py Paris --dry-run
+    """
+    typer.echo(f"🌍 Generating article about {city}...")
 
     # Initialize Claude client
     claude = ClaudeClient()
 
-    # Generate the article content
-    typer.echo("Generating article content...")
-    article = claude.generate_article(city, country)
+    # Get city information (country, continent, translations)
+    typer.echo("📍 Getting city information...")
+    city_info = build_city_info(claude, city)
 
-    # Get city information with translations
-    typer.echo("Getting translations and romanizations...")
-    city_info = build_city_info(claude, city, country)
-
-    # Display city info
-    typer.echo(f"  City (Chinese): {city_info.name_chinese} ({city_info.name_jyutping})")
+    typer.echo(f"   Country: {city_info.country}")
+    typer.echo(f"   Continent: {city_info.continent.title()}")
+    typer.echo(f"   Chinese: {city_info.name_chinese} ({city_info.name_jyutping})")
     typer.echo(
-        f"  Country (Chinese): {city_info.country_emoji} {city_info.country_chinese} ({city_info.country_jyutping})"
+        f"   Country (Chinese): {city_info.country_emoji} {city_info.country_chinese} ({city_info.country_jyutping})"
     )
+
+    # Get continent folder
+    continent_folder = get_continent_folder(city_info.continent)
+    if not continent_folder:
+        typer.echo(
+            f"❌ Unknown continent: {city_info.continent}. "
+            f"Valid options: {', '.join(CONTINENTS.keys())}",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    # Get article number
+    article_number = number if number is not None else get_next_article_number()
+    typer.echo(f"📝 Article number: {article_number:03d}")
+
+    # Generate the article content
+    typer.echo("✍️  Generating article content...")
+    article = claude.generate_article(city, city_info.country)
 
     # Process and format the article
     processed_article = process_article_content(article, city_info)
@@ -275,26 +395,56 @@ def generate(
         typer.echo("Generated Article (dry run):")
         typer.echo("=" * 60 + "\n")
         typer.echo(final_article)
+        typer.echo("\n" + "=" * 60)
+        typer.echo(f"Would save to: {continent_folder / format_filename(article_number, city)}")
     else:
         # Save the article
-        output_path = save_article(final_article, output_dir, article_number, city)
-        typer.echo(f"\nArticle saved to: {output_path}")
+        output_path = save_article(final_article, continent_folder, article_number, city)
+        typer.echo(f"✅ Article saved to: {output_path}")
+
+        # Build Hugo site if requested
+        if build:
+            typer.echo("🔨 Building Hugo site...")
+            if build_hugo_site():
+                typer.echo("✅ Hugo site built successfully!")
+                typer.echo(f"🌐 View at: https://ayeung.dev/100-cities-for-kids/")
+            else:
+                typer.echo("❌ Hugo build failed", err=True)
+                raise typer.Exit(1)
 
 
 @app.command()
 def info() -> None:
-    """Display information about the generator."""
+    """Display information about the generator and current status."""
     typer.echo("City Article Generator for Kids")
-    typer.echo("================================")
+    typer.echo("=" * 40)
     typer.echo(f"Claude Model: {CLAUDE_MODEL}")
-    typer.echo(f"Max Tokens: {MAX_TOKENS}")
-    typer.echo("\nFeatures:")
-    typer.echo("  - Generates kid-friendly city articles")
-    typer.echo("  - Translates city/country names to Traditional Chinese")
-    typer.echo("  - Adds Cantonese Jyutping romanization")
-    typer.echo("  - Includes country flag emojis")
+    typer.echo(f"Project Root: {PROJECT_ROOT}")
+    typer.echo(f"Content Dir: {CONTENT_DIR}")
+
+    # Count existing articles
+    total_articles = 0
+    typer.echo("\nArticles by Continent:")
+    for folder_name in sorted(CONTINENTS.values()):
+        folder_path = CONTENT_DIR / folder_name
+        if folder_path.exists():
+            count = len([f for f in folder_path.glob("*.md") if not f.name.startswith("_")])
+            total_articles += count
+            typer.echo(f"  {folder_name}: {count}")
+
+    typer.echo(f"\nTotal Articles: {total_articles}")
+    typer.echo(f"Next Article Number: {get_next_article_number():03d}")
+
     typer.echo("\nRequired Environment Variable:")
     typer.echo("  ANTHROPIC_API_KEY - Your Claude API key")
+
+
+@app.command()
+def list_continents() -> None:
+    """List all valid continent names."""
+    typer.echo("Valid Continents:")
+    for name, folder in sorted(set((v, v) for v in CONTINENTS.values())):
+        typer.echo(f"  - {folder}")
 
 
 if __name__ == "__main__":
