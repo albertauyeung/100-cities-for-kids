@@ -7,7 +7,7 @@ using the Claude API. It automatically:
 - Detects which continent the city belongs to
 - Calculates the next article number
 - Saves to the correct content folder
-- Optionally builds the Hugo site
+- Optionally builds the web app
 
 Usage:
     python generate-city-article.py "Tokyo"
@@ -368,7 +368,7 @@ def create_article_header(city_info: CityInfo) -> str:
 
 
 def create_frontmatter(article_number: int, city: str) -> str:
-    """Create Hugo frontmatter for the article."""
+    """Create frontmatter for the article."""
     return f"""---
 title: {article_number:03d}. {city}
 weight: {article_number}
@@ -408,26 +408,28 @@ def save_article(
 
 
 # ============================================================================
-# Hugo Build
+# Web App Build
 # ============================================================================
 
+WEB_DIR = PROJECT_ROOT / "web"
 
-def build_hugo_site() -> bool:
-    """Build the Hugo site. Returns True if successful."""
+
+def build_web_app() -> bool:
+    """Build the React web app. Returns True if successful."""
     try:
-        result = subprocess.run(
-            ["hugo"],
-            cwd=PROJECT_ROOT,
+        subprocess.run(
+            ["npm", "run", "build"],
+            cwd=WEB_DIR,
             capture_output=True,
             text=True,
             check=True,
         )
         return True
     except subprocess.CalledProcessError as e:
-        typer.echo(f"Hugo build failed: {e.stderr}", err=True)
+        typer.echo(f"Build failed: {e.stderr}", err=True)
         return False
     except FileNotFoundError:
-        typer.echo("Hugo not found. Please install Hugo first.", err=True)
+        typer.echo("npm not found. Please install Node.js first.", err=True)
         return False
 
 
@@ -446,7 +448,7 @@ app = typer.Typer(
 def main(
     city: str = typer.Argument(..., help="Name of the city to generate an article for"),
     build: bool = typer.Option(
-        False, "--build", "-b", help="Build Hugo site after generating"
+        False, "--build", "-b", help="Build web app after generating"
     ),
     dry_run: bool = typer.Option(
         False, "--dry-run", "-d", help="Print article without saving"
@@ -461,7 +463,7 @@ def main(
     - Detect the country and continent automatically
     - Generate a kid-friendly article
     - Save it to the correct content folder
-    - Optionally build the Hugo site
+    - Optionally build the web app
 
     Examples:
         python generate-city-article.py Tokyo
@@ -519,14 +521,14 @@ def main(
         output_path = save_article(final_article, continent_folder, article_number, city)
         typer.echo(f"✅ Article saved to: {output_path}")
 
-        # Build Hugo site if requested
+        # Build web app if requested
         if build:
-            typer.echo("🔨 Building Hugo site...")
-            if build_hugo_site():
-                typer.echo("✅ Hugo site built successfully!")
-                typer.echo(f"🌐 View at: https://ayeung.dev/100-cities-for-kids/")
+            typer.echo("🔨 Building web app...")
+            if build_web_app():
+                typer.echo("✅ Web app built successfully!")
+                typer.echo("🌐 View at: https://ayeung.dev/100-cities-for-kids/")
             else:
-                typer.echo("❌ Hugo build failed", err=True)
+                typer.echo("❌ Build failed", err=True)
                 raise typer.Exit(1)
 
 
@@ -588,7 +590,7 @@ def list_articles() -> None:
 def regenerate(
     city: str = typer.Argument(..., help="Name of the city to regenerate"),
     build: bool = typer.Option(
-        False, "--build", "-b", help="Build Hugo site after regenerating"
+        False, "--build", "-b", help="Build web app after regenerating"
     ),
     dry_run: bool = typer.Option(
         False, "--dry-run", "-d", help="Print article without saving"
