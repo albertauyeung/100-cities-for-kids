@@ -2,20 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles */
-body {
-  @apply bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen;
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
-/* Prose customizations for article content */
-.prose h2 {
-  @apply text-2xl font-bold mt-8 mb-4 text-indigo-700;
+/* Custom scrollbar for sidebar */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
 }
 
-.prose p {
-  @apply mb-4 leading-relaxed;
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.prose ul {
-  @apply list-disc list-inside mb-4;
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
 }
