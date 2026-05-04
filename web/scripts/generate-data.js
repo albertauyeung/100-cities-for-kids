@@ -79,6 +79,10 @@ function getArticleContent(content) {
   return match ? match[1].trim() : content;
 }
 
+function titleCase(s) {
+  return s.replace(/\b([a-z])/g, (_, c) => c.toUpperCase());
+}
+
 function processMarkdownFile(filePath, continent) {
   const content = fs.readFileSync(filePath, 'utf-8');
   const { frontmatter, content: body } = parseFrontmatter(content);
@@ -93,11 +97,12 @@ function processMarkdownFile(filePath, continent) {
 
   // Parse title to get city and country
   const titleMatch = frontmatter.title?.match(/^\d+\.\s*(.+)$/);
-  const cityName = titleMatch ? titleMatch[1] : citySlug.replace(/-/g, ' ');
+  const rawCityName = titleMatch ? titleMatch[1] : citySlug.replace(/-/g, ' ');
+  const cityName = titleCase(rawCityName);
 
-  // Extract country from the header
-  const headerMatch = body.match(/^#\s*([^,]+),\s*(.+)/m);
-  const country = headerMatch ? headerMatch[2].trim() : '';
+  // Extract country from the H1 header `# City, Country` (single line only).
+  const headerMatch = body.match(/^# ([^,\n]+),\s*([^\n]+)$/m);
+  const country = headerMatch ? titleCase(headerMatch[2].trim()) : '';
 
   // Parse city info
   const cityInfo = parseCityInfo(body);

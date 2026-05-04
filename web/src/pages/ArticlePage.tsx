@@ -54,7 +54,7 @@ export function ArticlePage({ cities }: ArticlePageProps) {
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold">
-            {city.name}, {city.country}
+            {city.name}{city.country ? `, ${city.country}` : ''}
           </h1>
           <div className="flex flex-wrap gap-x-6 gap-y-1 mt-4 text-sm text-white/90">
             <div>
