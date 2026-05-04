@@ -80,7 +80,7 @@
   {
     "id": "florence",
     "name": "Florence",
-    "country": "italy",
+    "country": "Italy",
     "continent": "europe",
     "articleNumber": 7,
     "chineseName": "佛羅倫斯",
@@ -236,7 +236,7 @@
   {
     "id": "beijing",
     "name": "Beijing",
-    "country": "amazing sights, and lots of fun things to discover. Let’s explore this city together! 🏯✨",
+    "country": "",
     "continent": "asia",
     "articleNumber": 19,
     "chineseName": "",
@@ -482,7 +482,7 @@
   },
   {
     "id": "riodejaneiro",
-    "name": "Rio de Janeiro",
+    "name": "Rio De Janeiro",
     "country": "Brazil",
     "continent": "south-america",
     "articleNumber": 38,

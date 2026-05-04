@@ -76,7 +76,7 @@ export function HomePage({ cities }: HomePageProps) {
                       #{city.articleNumber.toString().padStart(3, '0')}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500">{city.country}</p>
+                  {city.country && <p className="text-sm text-gray-500">{city.country}</p>}
                   <p className="text-sm text-gray-400 mt-1">
                     {city.chineseName} ({city.chineseJyutping})
                   </p>

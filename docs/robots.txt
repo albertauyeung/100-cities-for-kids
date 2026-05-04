@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ayeung.dev/100-cities-for-kids/sitemap.xml
